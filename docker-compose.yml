@@ -1,0 +1,91 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15.7
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: restaurant
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Rev@thy25
+    ports:
+      - "5434:5432"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports: 
+      - "6380:6379"
+    environment:
+      REDIS_PASSWORD: ""
+    networks:
+      - app-network
+
+  restaurantmgt:
+    image: ratheeshku/restaurantmgt:latest
+    restart: unless-stopped
+    environment: 
+      DB_Config: "host=postgres user=postgres password=Rev@thy25 dbname=restaurant port=5432 sslmode=disable"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+
+# version: '3.9'
+
+# services:
+#   postgres:
+#     image: postgres:15.7
+#     restart: unless-stopped
+#     environment:
+#       POSTGRES_DB: restaurant
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: Rev@thy25
+#     ports:
+#       - "5434:5432"
+#     networks:
+#       - app-network
+
+#   redis:
+#     image: redis:latest
+#     restart: unless-stopped
+#     ports: 
+#       - "6380:6379"
+#     environment:
+#       REDIS_PASSWORD: ""
+#     networks:
+#       - app-network
+
+#   restaurantmgt:
+#     image: ratheeshku/restaurantmgt:latest
+#     restart: unless-stopped
+#     environment: 
+#       DB_Config: "host=postgres user=postgres password=Rev@thy25 dbname=restaurant port=5432 sslmode=disable"
+#       REDIS_HOST: redis
+#       REDIS_PORT: 6379
+#       REDIS_PASSWORD: ""
+#     ports:
+#       - "8080:8080"
+#     depends_on:
+#       - postgres
+#       - redis
+#     networks:
+#       - app-network
+
+# networks:
+#   app-network:
+#     driver: bridge
+
